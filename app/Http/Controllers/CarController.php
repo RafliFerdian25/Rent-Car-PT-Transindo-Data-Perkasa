@@ -6,6 +6,7 @@ use App\Helpers\ResponseFormatter;
 use App\Models\Car;
 use App\Models\Brand;
 use App\Models\CarType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -33,12 +34,27 @@ class CarController extends Controller
     // Get data car
     public function getCar(Request $request)
     {
-        $cars = Car::with('brand:id,name', 'carType:id,name')
+        // dd($request->all());
+        $cars = Car::with('brand:id,name', 'carType:id,name', 'rents')
             ->when($request->filterBrand, function ($query) use ($request) {
                 $query->where('brand_id', $request->filterBrand);
             })
             ->when($request->filterCarType, function ($query) use ($request) {
                 $query->where('car_type_id', $request->filterCarType);
+            })
+            ->when($request->filterStartDate && $request->filterEndDate, function ($query) use ($request) {
+                $startDate = Carbon::parse($request->filterStartDate);
+                $endDate = Carbon::parse($request->filterEndDate);
+                $query->whereDoesntHave('rents', function ($query) use ($startDate, $endDate) {
+                    $query->where(function ($query) use ($startDate, $endDate) {
+                        $query->whereNotBetween('start_date', [$startDate, $endDate])
+                            ->orWhereNotBetween('end_date', [$startDate, $endDate])
+                            ->orWhere(function ($query) use ($startDate, $endDate) {
+                                $query->where('start_date', '<=', $startDate)
+                                    ->where('end_date', '>=', $endDate);
+                            });
+                    });
+                });
             })
             ->get();
 

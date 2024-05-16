@@ -26,7 +26,20 @@ class RentController extends Controller
             'currentNavChild' => 'index',
         ];
 
-        return view('rent.list', $data);
+        return view('rent.index', $data);
+    }
+
+    public function getRent()
+    {
+        if (auth()->user()->role == 'admin') {
+            $rents = Rent::with('car', 'user')->get();
+        } else {
+            $rents = Rent::with('car')->where('user_id', auth()->user()->id)->get();
+        }
+
+        return ResponseFormatter::success([
+            'rents' => $rents,
+        ], 'Data peminjaman berhasil diambil');
     }
 
     /**
@@ -65,18 +78,25 @@ class RentController extends Controller
         }
 
         // mengecek jika mobil tersedia
-        $car = Car::find($request->car_id);
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
+
+        if ($startDate->isBefore(Carbon::now()->subDay())) {
+            return ResponseFormatter::error([
+                'error' => 'Tanggal mulai harus lebih dari hari ini',
+            ], 'Peminjaman Gagal', 500);
+        }
+
+        if ($endDate->isBefore($startDate)) {
+            return ResponseFormatter::error([
+                'error' => 'Tanggal selesai harus lebih dari tanggal mulai',
+            ], 'Peminjaman Gagal', 500);
+        }
 
         $checkRent = Rent::where('car_id', $request->car_id)
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('start_date', [$startDate, $endDate])
-                    ->orWhereBetween('end_date', [$startDate, $endDate])
-                    ->orWhere(function ($query) use ($startDate, $endDate) {
-                        $query->where('start_date', '<=', $startDate)
-                            ->where('end_date', '>=', $endDate);
-                    });
+                    ->orWhereBetween('end_date', [$startDate, $endDate]);
             })
             ->exists();
 
@@ -104,32 +124,41 @@ class RentController extends Controller
                 'error' => $e->getMessage()
             ], 'Peminjaman Gagal', 500);
         }
-
-        dd($checkRent);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Rent $rent)
+    public function return(Request $request, Rent $rent)
     {
-        //
-    }
+        // mengecek jika mobil belum pada waktu pinjam
+        $startDate = Carbon::parse($rent->start_date);
+        $returnDate = Carbon::now();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Rent $rent)
-    {
-        //
-    }
+        if (Carbon::now()->isBefore($startDate)) {
+            return ResponseFormatter::error([
+                'error' => 'Belum tanggal mulai pinjam',
+            ], 'Pengembalian Gagal', 500);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateRentRequest $request, Rent $rent)
-    {
-        //
+        // mengecek apakah mobil dikembalikan yang meminjam
+        if ($rent->user_id != auth()->user()->id) {
+            return ResponseFormatter::error([
+                'error' => 'Anda tidak bisa mengembalikan mobil yang dipinjam oleh orang lain',
+            ], 'Pengembalian Gagal', 500);
+        }
+
+        // menghitung jumlah yang harus dibayar
+        $totalDays = $returnDate->diffInDays($startDate);
+        $totalDays = $totalDays > 0 ? $totalDays : 1;
+        $amount = $totalDays * $rent->car->rental_rate;
+
+        $rent->update([
+            'status' => 'kembali',
+            'return_date' => $returnDate,
+            'amount' => $amount,
+        ]);
+
+        return ResponseFormatter::success([
+            'redirect' => route('rent.index'),
+        ], 'Pengembalian Berhasil');
     }
 
     /**
@@ -137,6 +166,24 @@ class RentController extends Controller
      */
     public function destroy(Rent $rent)
     {
-        //
+        // mengecek jika mobil pada waktu pinjam
+        $startDate = Carbon::parse($rent->start_date);
+        $endDate = Carbon::parse($rent->end_date);
+
+        if (Carbon::now()->between($startDate, $endDate)) {
+            return ResponseFormatter::error([
+                'error' => 'Tidak bisa menghapus peminjaman saat ini',
+            ], 'Peminjaman Gagal', 500);
+        } else if (Carbon::now()->isAfter($endDate)) {
+            return ResponseFormatter::error([
+                'error' => 'Peminjaman sudah berakhir',
+            ], 'Peminjaman Gagal', 500);
+        }
+
+        $rent->delete();
+
+        return ResponseFormatter::success([
+            'redirect' => route('rent.index'),
+        ], 'Peminjaman Berhasil Dihapus');
     }
 }

@@ -7,3 +7,7 @@ Cara install:
 `php artisan migrate:fresh --seed`
 5. jalankan aplikasi dengan:
 `php artisan serve`
+
+catatan:
+- bisa login menggunakan admin, email: admin@rentcar.com, password: Secret123
+- bisa login menggunakan customer, email: rafli@rentcar.com, password: Secret123

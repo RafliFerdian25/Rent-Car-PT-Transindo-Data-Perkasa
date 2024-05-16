@@ -43,13 +43,18 @@ Route::group(['middleware' => ['auth']], function () {
         Route::delete('/car/{car:id}', 'destroy')->name('car.destroy');
     });
 
+    Route::controller(RentController::class)->group(function () {
+        Route::get('/rent', 'index')->name('rent.index');
+        Route::get('/rent/data', 'getRent')->name('rent.data');
+    });
 
     Route::middleware(['checkRole:customer'])->group(function () {
         Route::controller(RentController::class)->group(function () {
-            Route::get('/rent', 'index')->name('rent.index');
             Route::get('/rent/history', 'history')->name('rent.history');
             Route::get('/rent/create', 'create')->name('rent.create');
             Route::post('/rent', 'store')->name('rent.store');
+            Route::delete('/rent/{rent:id}', 'destroy')->name('rent.destroy');
+            Route::post('/rent/{rent:id}/return', 'return')->name('rent.return');
         });
     });
 });

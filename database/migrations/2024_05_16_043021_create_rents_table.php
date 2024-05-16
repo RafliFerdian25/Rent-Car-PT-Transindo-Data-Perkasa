@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->dateTime('return_date')->nullable();
-            $table->enum('status', ['rent', 'return'])->default('rent');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->date('return_date')->nullable();
+            $table->enum('status', ['pinjam', 'kembali'])->default('pinjam');
             $table->integer('amount')->default(0);
             $table->timestamps();
         });

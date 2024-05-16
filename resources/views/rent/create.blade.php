@@ -38,7 +38,7 @@
                         <div class="card-header">
                             <div class="card-title">Form Peminjaman Mobil</div>
                             <div class="card-category">
-                                Form ini digunakan untuk meminjam mobil pada perpustakaan SMK Negeri 1 Sungai Menang
+                                Form ini digunakan untuk meminjam mobil
                             </div>
                         </div>
                         <form id="formAddRent" method="POST">
@@ -111,13 +111,15 @@
             $('#student_id').select2({
                 theme: "bootstrap"
             });
-            var today = moment().format('YYYY/MM/DD');;
+            var today = moment().format('YYYY/MM/DD');
             $('#start_date').datetimepicker({
                 format: 'DD/MM/YYYY',
-                defaultDate: today
+                defaultDate: today,
+                minDate: today,
             });
             $('#end_date').datetimepicker({
                 format: 'DD/MM/YYYY',
+                minDate: today,
             });
         });
 

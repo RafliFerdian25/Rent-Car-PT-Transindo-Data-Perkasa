@@ -96,7 +96,7 @@
         <li class="nav-item dropdown hidden-caret">
             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                 <div class="avatar-sm">
-                    <img src="{{ asset('asset/img/dummy/profile-placeholder.png') }}" alt="profile photo admin"
+                    <img src="{{ asset('assets/img/dummy/profile-placeholder.png') }}" alt="profile photo admin"
                         class="avatar-img rounded-circle">
                 </div>
             </a>
@@ -105,7 +105,7 @@
                     <li>
                         <div class="user-box">
                             <div class="avatar-lg">
-                                <img src="{{ asset('asset/img/dummy/profile-placeholder.png') }}"
+                                <img src="{{ asset('assets/img/dummy/profile-placeholder.png') }}"
                                     alt="profile photo admin" class="avatar-img rounded">
                             </div>
                             <div class="u-text">

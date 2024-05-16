@@ -26,6 +26,18 @@ class DatabaseSeeder extends Seeder
             'driving_license' => '1234567890',
         ]);
 
+        User::factory()->create([
+            'email' => 'rafli@rentcar.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('Secret123'),
+            'role' => 'customer',
+            'name' => 'rafli',
+            'address' => 'Jl. rafli No. 1',
+            'phone' => '13513136136',
+            'driving_license' => '1234141351567890',
+        ]);
+
+
         $this->call([
             BrandSeeder::class,
             CarTypeSeeder::class,

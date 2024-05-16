@@ -2,7 +2,7 @@
     {{-- user --}}
     <div class="user">
         <div class="avatar-sm float-left mr-2">
-            <img src="{{ asset('asset/img/dummy/profile-placeholder.png') }}" alt="profile photo admin"
+            <img src="{{ asset('assets/img/dummy/profile-placeholder.png') }}" alt="profile photo admin"
                 class="avatar-img rounded-circle">
         </div>
         <div class="info">
@@ -13,16 +13,6 @@
                 </span>
             </a>
             <div class="clearfix"></div>
-
-            {{-- <div class="collapse in" id="collapseExample">
-                <ul class="nav">
-                    <li>
-                        <a href="{{ route('admin.profile') }}">
-                            <span class="link-collapse">Profil Saya</span>
-                        </a>
-                    </li>
-                </ul>
-            </div> --}}
         </div>
     </div>
 
@@ -35,62 +25,6 @@
                 <p>Daftar Mobil</p>
             </a>
         </li>
-        {{-- book --}}
-        <li class="nav-item @if ($currentNav == 'book') active @endif">
-            <a data-toggle="collapse" href="#bookMenu">
-                <i class="fas fa-book"></i>
-                <p>Buku</p>
-                <span class="caret"></span>
-            </a>
-            <div class="collapse" id="bookMenu">
-                <ul class="nav nav-collapse">
-                    <li class="@if ($currentNavChild == 'library') active @endif">
-                        <a href="{{ route('car.index') }}">
-                            <span class="sub-item">Perpustakaan</span>
-                        </a>
-                    </li>
-                    <li class="@if ($currentNavChild == 'ebook') active @endif">
-                        <a href="{{ route('car.index') }}">
-                            <span class="sub-item">E-Book</span>
-                        </a>
-                    </li>
-                    <li class="@if ($currentNavChild == 'addBook') active @endif">
-                        <a href="{{ route('car.index') }}">
-                            <span class="sub-item">Tambah Buku</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        {{-- student --}}
-        <li class="nav-item @if ($currentNav == 'student') active @endif">
-            <a data-toggle="collapse" href="#studentMenu">
-                <i class="fas fa-user-graduate"></i>
-                <p>Siswa</p>
-                <span class="caret"></span>
-            </a>
-            <div class="collapse" id="studentMenu">
-                <ul class="nav nav-collapse">
-                    <li class="@if ($currentNavChild == 'student') active @endif">
-                        <a href="{{ route('car.index') }}">
-                            <span class="sub-item">Pinjam</span>
-                        </a>
-                    </li>
-                    <li class="@if ($currentNavChild == 'fines') active @endif">
-                        <a href="{{ route('car.index') }}">
-                            <span class="sub-item">Denda</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        {{-- category --}}
-        <li class="nav-item @if ($currentNav == 'category') active @endif">
-            <a href="{{ route('car.index') }}">
-                <i class="fas fa-layer-group"></i>
-                <p>Kategori</p>
-            </a>
-        </li>
         {{-- rent --}}
         <li class="nav-item @if ($currentNav == 'rent') active @endif">
             <a data-toggle="collapse" href="#rentMenu">
@@ -100,7 +34,7 @@
             </a>
             <div class="collapse" id="rentMenu">
                 <ul class="nav nav-collapse">
-                    <li class="@if ($currentNavChild == 'listBorrow') active @endif">
+                    <li class="@if ($currentNavChild == 'index') active @endif">
                         <a href="{{ route('rent.index') }}">
                             <span class="sub-item">Daftar Pinjam</span>
                         </a>

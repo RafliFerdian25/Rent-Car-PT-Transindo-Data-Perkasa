@@ -4,24 +4,18 @@
             <ul class="nav">
                 <li class="nav-item">
                     <a class="nav-link" href="/">
-                        Perpus Digital
+                        Daftar Mobil
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('car.index') }}">
-                        Buku Perpustakaan
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('car.index') }}">
-                        E-Book
+                    <a class="nav-link" href="{{ route('rent.index') }}">
+                        Pinjam Mobil
                     </a>
                 </li>
             </ul>
         </nav>
         <div class="copyright ml-auto">
-            2023, made with <i class="fa fa-heart heart text-danger"></i> by Team Perpus Digital SMK Negeri 1 Sungai
-            Menang
+            2024, made with <i class="fa fa-heart heart text-danger"></i> by Rafli
         </div>
     </div>
 </footer>
