@@ -8,12 +8,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('book') }}">
+                    <a class="nav-link" href="{{ route('car.index') }}">
                         Buku Perpustakaan
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('ebook') }}">
+                    <a class="nav-link" href="{{ route('car.index') }}">
                         E-Book
                     </a>
                 </li>

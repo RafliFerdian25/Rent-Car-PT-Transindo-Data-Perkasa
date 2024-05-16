@@ -8,7 +8,7 @@
                 <h4 class="page-title">Data Denda Siswa</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('admin.dashboard') }}">
+                        <a href="{{ route('rent.car.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>

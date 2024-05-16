@@ -3,11 +3,12 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\RentController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 // Auth
@@ -24,15 +25,17 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::controller(CarController::class)->group(function () {
-        Route::get('/admin/book', 'book')->name('admin.book');
-        Route::get('/admin/book/data', 'getBook')->name('admin.book.data');
-        Route::get('/admin/book/category/data', 'getCategories')->name('admin.book.category.data');
-        Route::get('/admin/ebook', 'ebook')->name('admin.ebook');
-        Route::get('/admin/ebook/data', 'getEbook')->name('admin.ebook.data');
-        Route::get('/admin/book/create', 'create')->name('admin.book.create');
-        Route::get('/admin/book/{book:id}/edit', 'edit')->name('admin.book.edit');
-        Route::put('/admin/book/{book:id}', 'update')->name('admin.book.update');
-        Route::post('/admin/book', 'store')->name('admin.book.store');
-        Route::delete('/admin/book/{book:id}', 'destroy')->name('admin.book.destroy');
+        Route::get('/car', 'index')->name('car.index');
+        Route::get('/car/data', 'getcar')->name('car.data');
+        Route::get('/car/category/data', 'getCategories')->name('car.category.data');
+        Route::get('/car/create', 'create')->name('car.create');
+        Route::post('/car', 'store')->name('car.store');
+        Route::get('/car/{car:id}/edit', 'edit')->name('car.edit');
+        Route::put('/car/{car:id}', 'update')->name('car.update');
+        Route::delete('/car/{car:id}', 'destroy')->name('car.destroy');
+    });
+
+    Route::controller(RentController::class)->group(function () {
+        Route::get('/', 'index')->name('rent.car.index');
     });
 });

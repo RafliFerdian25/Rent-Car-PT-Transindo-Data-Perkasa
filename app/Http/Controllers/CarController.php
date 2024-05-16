@@ -13,7 +13,14 @@ class CarController extends Controller
      */
     public function index()
     {
-        //
+
+        $data = [
+            'title' => 'Daftar Mobil | Rent Car',
+            'currentNav' => 'car',
+            'currentNavChild' => 'car',
+        ];
+
+        return view('car.index', $data);
     }
 
     /**

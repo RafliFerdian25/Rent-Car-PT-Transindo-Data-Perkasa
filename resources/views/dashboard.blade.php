@@ -10,7 +10,7 @@
                             Menang</h5>
                     </div>
                     <div class="ml-xl-auto py-2 py-xl-0">
-                        <a href="{{ route('admin.book') }}" class="btn btn-white btn-border btn-round mr-2">Data Buku</a>
+                        <a href="{{ route('car.index') }}" class="btn btn-white btn-border btn-round mr-2">Data Buku</a>
                         <a href="{{ route('admin.category') }}" class="btn btn-secondary btn-round">Lihat Kategori</a>
                     </div>
                 </div>

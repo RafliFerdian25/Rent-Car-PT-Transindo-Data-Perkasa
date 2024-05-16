@@ -1,14 +1,14 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">
         <div class="page-inner">
             {{-- header --}}
             <div class="page-header">
-                <h4 class="page-title">E-Book</h4>
+                <h4 class="page-title">Buku Perpustakaan</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('admin.dashboard') }}">
+                        <a href="{{ route('rent.car.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>
@@ -17,7 +17,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="#">
-                            Data E-Book
+                            Data Buku Perpustakaan
                         </a>
                     </li>
                 </ul>
@@ -29,9 +29,9 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-head-row">
-                                <div class="card-title">Data E-Book</div>
+                                <div class="card-title">Data Buku Perpustakaan</div>
                                 <div class="card-tools">
-                                    <a href="{{ route('admin.book.create') }}"
+                                    <a href="{{ route('car.create') }}"
                                         class="btn btn-info btn-border btn-round btn-sm mr-2">
                                         <span class="btn-label">
                                         </span>
@@ -42,18 +42,19 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive pb-4">
-                                <table id="eBookTable" class="display table table-striped table-hover">
+                                <table id="bookTable" class="display table table-striped table-hover">
                                     <thead>
                                         <tr class="space-nowrap">
                                             <th class="text-center">#</th>
                                             <th class="filter-none text-center">Cover</th>
-                                            <th class="filter-none">ID</th>
+                                            <th>ID</th>
                                             <th class="filter-none">ISBN</th>
                                             <th class="filter-none">Kategori</th>
                                             <th class="">Judul</th>
                                             <th class="filter-none">Penerbit</th>
                                             <th class="filter-none">Pengarang</th>
                                             <th class="text-center">Tahun Terbit</th>
+                                            <th class="text-center">Jumlah Buku</th>
                                             <th class="text-center filter-none text-nowrap">Aksi</th>
                                         </tr>
                                     </thead>
@@ -71,22 +72,7 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
-            // add button create report
-            $('.eBookTable_category_wrapper').prepend(
-                `<div id="eBookTable_category" class="text-right mr-5">
-                    <label class="text-nowrap" for="eBookTable_category">Kategori:
-                        <select name="eBookTable_category" onchange="getEBooks()" id="bookTable_category_select" class="form-control form-filter-datatable d-inline-block ml-1" aria-controls="eBookTable">
-                            <option value="all">Semua Kategori</option>
-                        </select></label>
-                </div>`
-            );
-
-            getCategories();
-            getEBooks();
-        });
-
-        const eBookTable = $('#eBookTable').DataTable({
+        const bookTable = $('#bookTable').DataTable({
             columnDefs: [{
                 targets: 'filter-none',
                 orderable: false,
@@ -133,19 +119,36 @@
             },
             lengthMenu: [5, 10, 25, 50, 100],
             pageLength: 10, // default page length
-            dom: "<'row pb-0 py-2'<'col-sm-12 col-xl-4'l><'col-sm-12 col-xl-8 eBookTable_category_wrapper'f>>" +
+            dom: "<'row pb-0 py-2'<'col-sm-12 col-xl-4'l><'col-sm-12 col-xl-8 bookTable_category_wrapper'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row pt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         });
 
+        $(document).ready(function() {
+            localStorage.removeItem('ebookPreview');
+
+            // add button create report
+            $('.bookTable_category_wrapper').prepend(
+                `<div id="bookTable_category" class="text-right mr-5">
+                    <label class="text-nowrap" for="bookTable_category">Kategori:
+                        <select name="bookTable_category" id="bookTable_category_select" class="form-control form-filter-datatable d-inline-block ml-1" aria-controls="bookTable" onchange="getBooks()">
+                            <option value="all" selected>Semua Kategori</option>
+                        </select></label>
+                </div>`
+            );
+
+            getCategories();
+            getBooks();
+        });
+
         const showLoadingIndicator = () => {
-            $('#bookTableBody').html(tableLoader(10, `{{ asset('assets/img/loader/Ellipsis-2s-48px.svg') }}`));
+            $('#bookTableBody').html(tableLoader(11, `{{ asset('assets/img/loader/Ellipsis-2s-48px.svg') }}`));
         }
 
         function getCategories() {
             $.ajax({
                 type: "GET",
-                url: "{{ route('admin.book.category.data') }}",
+                url: "{{ route('car.category.data') }}",
                 dataType: "json",
                 success: function(response) {
                     if (response.data.categories.length > 0) {
@@ -160,13 +163,13 @@
             });
         }
 
-        function getEBooks() {
-            eBookTable.clear().draw();
+        function getBooks() {
+            bookTable.clear().draw();
             showLoadingIndicator();
 
             $.ajax({
                 type: "GET",
-                url: "{{ route('admin.ebook.data') }}",
+                url: "{{ route('car.data') }}",
                 data: {
                     category: $('#bookTable_category_select').val(),
                 },
@@ -177,9 +180,9 @@
                             var rowData = [
                                 index + 1,
                                 `<div class="cover-book-image">
-                                    <a href="{{ asset('storage/${book.cover}') }}"
+                                    <a href="{{ asset('assets/img/dummy/Brown modern history book cover.png') }}"
                                         class="">
-                                        <img src="{{ asset('storage/${book.cover}') }}"
+                                        <img src="{{ asset('assets/img/dummy/Brown modern history book cover.png') }}"
                                             class="img-fluid">
                                     </a>
                                 </div>`,
@@ -190,17 +193,15 @@
                                 book.publisher,
                                 book.author,
                                 book.year,
-                                `<a href="{{ asset('storage/${book.file}') }}" class="btn btn-warning btn-sm mr-2">
-                                    <i class="fas fa-download"></i>
-                                </a>
-                                <a href="{{ url('admin/book/${book.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
+                                book.stock,
+                                `<a href="{{ url('admin/book/${book.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button onclick="deleteBook(${book.id})" class="btn btn-danger btn-sm">
+                                <button onclick="deleteBook('${book.id}')" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>`,
                             ];
-                            var rowNode = eBookTable.row.add(rowData).draw(
+                            var rowNode = bookTable.row.add(rowData).draw(
                                     false)
                                 .node();
 
@@ -208,7 +209,8 @@
                             $(rowNode).find('td').eq(1).addClass('text-center');
                             $(rowNode).find('td').eq(3).addClass('text-nowrap');
                             $(rowNode).find('td').eq(8).addClass('text-center');
-                            $(rowNode).find('td').eq(9).addClass('text-center text-nowrap');
+                            $(rowNode).find('td').eq(9).addClass('text-center');
+                            $(rowNode).find('td').eq(10).addClass('text-center text-nowrap');
                         });
 
                         $('.cover-book-image').magnificPopup({
@@ -230,14 +232,18 @@
                             }
                         });
                     } else {
-                        $('#bookTableBody').html(tableEmpty(10, 'e-book'));
+                        $('#bookTableBody').html(tableEmpty(11, 'buku perpustakaan'));
                     }
                 },
                 error: function(response) {
-                    $('#bookTableBody').html(tableError(10, `${response.responseJSON.message}`));
+                    $('#bookTableBody').html(tableError(11, `${response.responseJSON.message}`));
                 }
             });
         }
+
+        $("#bookTable_category_select").on('change', function() {
+            getBooks();
+        });
 
         function deleteBook(id) {
             swal({
@@ -277,8 +283,8 @@
                             if (xhr.responseJSON) {
                                 swal({
                                     title: "Gagal!",
-                                    text: xhr.responseJSON.meta.message + ", Error : " + xhr
-                                        .responseJSON.data.error,
+                                    text: xhr.statusText + ", Error : " + xhr
+                                        .responseJSON.message,
                                     icon: "error",
                                 });
                             } else {

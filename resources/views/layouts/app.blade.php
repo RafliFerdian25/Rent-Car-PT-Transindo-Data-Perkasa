@@ -67,12 +67,12 @@
     <div class="wrapper">
         <div class="main-header">
             {{-- Logo Header --}}
-            @include('admin.components.headerLogo')
+            @include('components.headerLogo')
             {{-- End Logo Header --}}
 
             {{-- Navbar Header --}}
             <nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue2">
-                @include('admin.components.navbar')
+                @include('components.navbar')
             </nav>
             {{-- End Navbar --}}
         </div>
@@ -80,7 +80,7 @@
         {{-- Sidebar --}}
         <div class="sidebar sidebar-style-2" data-color="blue">
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
-                @include('admin.components.sidebar')
+                @include('components.sidebar')
             </div>
         </div>
         {{-- End Sidebar --}}
@@ -88,7 +88,7 @@
         {{-- main content --}}
         <div class="main-panel">
             @yield('content')
-            @include('admin.components.footer')
+            @include('components.footer')
         </div>
         {{-- end main content --}}
     </div>

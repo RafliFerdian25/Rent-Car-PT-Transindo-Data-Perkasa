@@ -2,7 +2,7 @@
     {{-- user --}}
     <div class="user">
         <div class="avatar-sm float-left mr-2">
-            <img src="{{ asset('storage/' . auth()->user()->officer->profile_picture) }}" alt="profile photo admin"
+            <img src="{{ asset('asset/img/dummy/profile-placeholder.png') }}" alt="profile photo admin"
                 class="avatar-img rounded-circle">
         </div>
         <div class="info">
@@ -14,7 +14,7 @@
             </a>
             <div class="clearfix"></div>
 
-            <div class="collapse in" id="collapseExample">
+            {{-- <div class="collapse in" id="collapseExample">
                 <ul class="nav">
                     <li>
                         <a href="{{ route('admin.profile') }}">
@@ -22,7 +22,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> --}}
         </div>
     </div>
 
@@ -30,7 +30,7 @@
     <ul class="nav nav-primary">
         {{-- dashboard --}}
         <li class="nav-item @if ($currentNav == 'dashboard') active @endif">
-            <a href="{{ route('admin.dashboard') }}">
+            <a href="{{ route('rent.car.index') }}">
                 <i class="fas fa-home"></i>
                 <p>Dashboard</p>
             </a>
@@ -45,17 +45,17 @@
             <div class="collapse" id="bookMenu">
                 <ul class="nav nav-collapse">
                     <li class="@if ($currentNavChild == 'library') active @endif">
-                        <a href="{{ route('admin.book') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Perpustakaan</span>
                         </a>
                     </li>
                     <li class="@if ($currentNavChild == 'ebook') active @endif">
-                        <a href="{{ route('admin.ebook') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">E-Book</span>
                         </a>
                     </li>
                     <li class="@if ($currentNavChild == 'addBook') active @endif">
-                        <a href="{{ route('admin.book.create') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Tambah Buku</span>
                         </a>
                     </li>
@@ -72,12 +72,12 @@
             <div class="collapse" id="studentMenu">
                 <ul class="nav nav-collapse">
                     <li class="@if ($currentNavChild == 'student') active @endif">
-                        <a href="{{ route('admin.student') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Pinjam</span>
                         </a>
                     </li>
                     <li class="@if ($currentNavChild == 'fines') active @endif">
-                        <a href="{{ route('admin.student.fines') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Denda</span>
                         </a>
                     </li>
@@ -86,7 +86,7 @@
         </li>
         {{-- category --}}
         <li class="nav-item @if ($currentNav == 'category') active @endif">
-            <a href="{{ route('admin.category') }}">
+            <a href="{{ route('car.index') }}">
                 <i class="fas fa-layer-group"></i>
                 <p>Kategori</p>
             </a>
@@ -101,17 +101,17 @@
             <div class="collapse" id="transactionMenu">
                 <ul class="nav nav-collapse">
                     <li class="@if ($currentNavChild == 'listBorrow') active @endif">
-                        <a href="{{ route('admin.list.transaction') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Daftar Pinjam</span>
                         </a>
                     </li>
                     <li class="@if ($currentNavChild == 'create') active @endif">
-                        <a href="{{ route('admin.transaction.create') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Pinjam Buku</span>
                         </a>
                     </li>
                     <li class="@if ($currentNavChild == 'history') active @endif">
-                        <a href="{{ route('admin.history.transaction') }}">
+                        <a href="{{ route('car.index') }}">
                             <span class="sub-item">Riwayat Pinjam</span>
                         </a>
                     </li>

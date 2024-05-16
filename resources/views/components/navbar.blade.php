@@ -34,7 +34,7 @@
                     <div class="quick-actions-items">
                         <div class="row m-0">
                             {{-- dashboard --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('admin.dashboard') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item rounded-circle" style="background: #6861ce">
                                         <i class="fas fa-home"></i>
@@ -43,7 +43,7 @@
                                 </div>
                             </a>
                             {{-- book --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('admin.book') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('car.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-info rounded-circle">
                                         <i class="fas fa-book"></i>
@@ -52,7 +52,7 @@
                                 </div>
                             </a>
                             {{-- ebook --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('admin.ebook') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-warning rounded-circle">
                                         <i class="fas fa-book"></i>
@@ -61,7 +61,7 @@
                                 </div>
                             </a>
                             {{-- transaction --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('admin.list.transaction') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-dark rounded-circle">
                                         <i class="fas fa-box"></i>
@@ -70,7 +70,7 @@
                                 </div>
                             </a>
                             {{-- student --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('admin.student') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-danger rounded-circle">
                                         <i class="fas fa-user-graduate"></i>
@@ -79,7 +79,7 @@
                                 </div>
                             </a>
                             {{-- category --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('admin.category') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-success rounded-circle">
                                         <i class="fas fa-layer-group"></i>
@@ -96,8 +96,8 @@
         <li class="nav-item dropdown hidden-caret">
             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                 <div class="avatar-sm">
-                    <img src="{{ asset('storage/' . auth()->user()->officer->profile_picture) }}"
-                        alt="profile photo admin" class="avatar-img rounded-circle">
+                    <img src="{{ asset('asset/img/dummy/profile-placeholder.png') }}" alt="profile photo admin"
+                        class="avatar-img rounded-circle">
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -105,22 +105,22 @@
                     <li>
                         <div class="user-box">
                             <div class="avatar-lg">
-                                <img src="{{ asset('storage/' . auth()->user()->officer->profile_picture) }}"
+                                <img src="{{ asset('asset/img/dummy/profile-placeholder.png') }}"
                                     alt="profile photo admin" class="avatar-img rounded">
                             </div>
                             <div class="u-text">
-                                <h4>{{ Auth::user()->officer->name }}</h4>
+                                <h4>{{ Auth::user()->name }}</h4>
                                 <p class="text-muted">{{ Auth::user()->email }}</p>
-                                <a href="{{ route('admin.profile') }}" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                {{-- <a href="{{ route('admin.profile') }}" class="btn btn-xs btn-secondary btn-sm">View
+                                    Profile</a> --}}
                             </div>
                         </div>
                     </li>
                     <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('admin.dashboard') }}">Home</a>
+                        <a class="dropdown-item" href="{{ route('rent.car.index') }}">Home</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item hover-logout" href="{{ url('logout') }}"
-                            onclick="logout()">Logout</a>
+                        <a class="dropdown-item hover-logout" href="{{ url('logout') }}" onclick="logout()">Logout</a>
                     </li>
                 </div>
             </ul>

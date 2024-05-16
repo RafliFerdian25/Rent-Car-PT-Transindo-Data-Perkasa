@@ -8,7 +8,7 @@
                 <h4 class="page-title">Tambah Buku</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('admin.dashboard') }}">
+                        <a href="{{ route('rent.car.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>
@@ -401,7 +401,7 @@
                 $('#formAddBookButton').prop('disabled', true);
                 $.ajax({
                     type: "POST",
-                    url: `{{ route('admin.book.store') }}`,
+                    url: `{{ route('car.index.store') }}`,
                     data: formData,
                     processData: false,
                     contentType: false,
