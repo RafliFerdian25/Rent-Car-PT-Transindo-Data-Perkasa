@@ -17,9 +17,12 @@ class CarController extends Controller
      */
     public function index()
     {
-
+        $brands = Brand::select('id', 'name')->get();
+        $carTypes = CarType::select('id', 'name')->get();
         $data = [
             'title' => 'Daftar Mobil | Rent Car',
+            'brands' => $brands,
+            'carTypes' => $carTypes,
             'currentNav' => 'car',
             'currentNavChild' => 'car',
         ];
@@ -30,7 +33,14 @@ class CarController extends Controller
     // Get data car
     public function getCar(Request $request)
     {
-        $cars = Car::with('brand:id,name', 'carType:id,name')->get();
+        $cars = Car::with('brand:id,name', 'carType:id,name')
+            ->when($request->filterBrand, function ($query) use ($request) {
+                $query->where('brand_id', $request->filterBrand);
+            })
+            ->when($request->filterCarType, function ($query) use ($request) {
+                $query->where('car_type_id', $request->filterCarType);
+            })
+            ->get();
 
         return ResponseFormatter::success([
             'cars' => $cars

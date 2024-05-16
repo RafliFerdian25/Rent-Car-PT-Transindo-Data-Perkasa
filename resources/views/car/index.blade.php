@@ -24,6 +24,90 @@
             </div>
 
             {{-- main content --}}
+            {{-- Filter  --}}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Form Tambah Mobil</div>
+                            <div class="card-category">
+                                Form ini digunakan untuk menambah Mobil
+                            </div>
+                        </div>
+                        <form id="formFilterCar">
+                            @csrf
+                            <div class="card-body">
+                                {{-- Merek --}}
+                                <div class="form-group form-show-validation row">
+                                    <label for="brand_id" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Merek
+                                        <span class="required-label">*</span></label>
+                                    <div class="col-lg-6 col-md-9 col-sm-8">
+                                        <select class="form-control" id="filterBrand" name="brand_id">
+                                            <option value="">Pilih Merek</option>
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- Model --}}
+                                <div class="form-group form-show-validation row">
+                                    <label for="car_type_id" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Model
+                                        <span class="required-label">*</span></label>
+                                    <div class="col-lg-6 col-md-9 col-sm-8 select2-input select2-info">
+                                        <select class="form-control" id="filterCarType" name="car_type_id">
+                                            <option value="">Pilih Model</option>
+                                            @foreach ($carTypes as $carType)
+                                                <option value="{{ $carType->id }}">{{ $carType->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- Tarif sewa --}}
+                                {{-- <div class="form-group form-show-validation row">
+                                    <label for="rental_rate" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Tarif
+                                        Sewa
+                                        <span class="required-label">*</span></label>
+                                    <div class="col-lg-6 col-md-9 col-sm-8">
+                                        <input type="number" class="form-control" id="rental_rate" name="rental_rate"
+                                            placeholder="Masukkan Tarif Sewa" required>
+                                    </div>
+                                </div> --}}
+                                {{-- Tanggal Mulai --}}
+                                <div class="form-group form-show-validation row">
+                                    <label for="start_date" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Tanggal
+                                        Mulai
+                                        <span class="required-label">*</span></label>
+                                    <div class="col-lg-6 col-md-9 col-sm-8">
+                                        <input type="date" class="form-control" id="filterStartDate" name="start_date"
+                                            placeholder="Masukkan Tanggal Mulai">
+                                    </div>
+                                </div>
+                                {{-- Tanggal Selesai --}}
+                                <div class="form-group form-show-validation row">
+                                    <label for="end_date" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Tanggal
+                                        Selesai
+                                        <span class="required-label">*</span></label>
+                                    <div class="col-lg-6 col-md-9 col-sm-8">
+                                        <input type="date" class="form-control" id="filterEndDate" name="end_date"
+                                            placeholder="Masukkan Tanggal Selesai">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <button class="btn btn-primary ml-3" id="formFilterCarButton" type="button"
+                                            onclick="getCars()">Kirim</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Daftar Mobil --}}
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -135,7 +219,6 @@
         });
 
         $(document).ready(function() {
-            getCategories();
             getCars();
         });
 
@@ -143,37 +226,21 @@
             $('#carTableBody').html(tableLoader(11, `{{ asset('assets/img/loader/Ellipsis-2s-48px.svg') }}`));
         }
 
-        function getCategories() {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('car.category.data') }}",
-                dataType: "json",
-                success: function(response) {
-                    if (response.data.categories.length > 0) {
-                        $.each(response.data.categories, function(index, category) {
-                            $('#carTable_category_select').append(
-                                `<option value="${category.id}">${category.name}</option>`
-                            );
-                        });
-                    }
-                },
-                error: function(response) {}
-            });
-        }
-
         function getCars() {
             carTable.clear().draw();
             showLoadingIndicator();
 
+            $('#formFilterCarButton').html('<i class="fas fa-circle-notch text-lg spinners-2"></i>');
+            $('#formFilterCarButton').prop('disabled', true);
             $.ajax({
                 type: "GET",
                 url: "{{ route('car.data') }}",
                 data: {
                     token: "{{ csrf_token() }}",
-                    carType: $('#filterCarType').val(),
-                    brand: $('#filterBrand').val(),
-                    startDate: $('#filterStartDate').val(),
-                    endDate: $('#filterEndDate').val(),
+                    filterCarType: $('#filterCarType').val(),
+                    filterBrand: $('#filterBrand').val(),
+                    filterStartDate: $('#filterStartDate').val(),
+                    filterEndDate: $('#filterEndDate').val(),
                 },
                 dataType: "json",
                 success: function(response) {
@@ -207,9 +274,15 @@
                     } else {
                         $('#carTableBody').html(tableEmpty(11, 'Mobil Rental'));
                     }
+
+                    $('#formFilterCarButton').html('Kirim');
+                    $('#formFilterCarButton').prop('disabled', false);
                 },
                 error: function(response) {
                     $('#carTableBody').html(tableError(11, `${response.responseJSON.message}`));
+
+                    $('#formFilterCarButton').html('Kirim');
+                    $('#formFilterCarButton').prop('disabled', false);
                 }
             });
         }
