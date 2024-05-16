@@ -6,7 +6,11 @@ use App\Helpers\ResponseFormatter;
 use App\Models\Car;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
+use App\Models\Brand;
+use App\Models\CarType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CarController extends Controller
 {
@@ -40,23 +44,55 @@ class CarController extends Controller
      */
     public function create()
     {
-        //
+        $brands = Brand::select('id', 'name')->get();
+        $carTypes = CarType::select('id', 'name')->get();
+        $data = [
+            'title' => 'Tambah Mobil | Rent Car',
+            'brands' => $brands,
+            'carTypes' => $carTypes,
+            'currentNav' => 'car',
+            'currentNavChild' => 'addCar',
+        ];
+
+        return view('car.create', $data);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCarRequest $request)
+    public function store(Request $request)
     {
-        //
-    }
+        $rules = [
+            'name' => 'required|string',
+            'brand_id' => 'required|exists:brands,id',
+            'car_type_id' => 'required|exists:car_types,id',
+            'rental_rate' => 'required|numeric',
+            'license_plate' => 'required|string',
+        ];
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Car $car)
-    {
-        //
+        $validated = Validator::make($request->all(), $rules);
+
+        if ($validated->fails()) {
+            return ResponseFormatter::error([
+                'message' => $validated->errors()->first()
+            ], 'Validasi gagal', 422);
+        }
+
+        try {
+            DB::beginTransaction();
+            $car = Car::create($request->all());
+
+            DB::commit();
+
+            return ResponseFormatter::success([
+                'redirect' => route('car.index'),
+            ], 'Data mobil berhasil ditambahkan');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => $e->getMessage()
+            ], 'Data mobil gagal ditambahkan', 500);
+        }
     }
 
     /**
@@ -64,7 +100,17 @@ class CarController extends Controller
      */
     public function edit(Car $car)
     {
-        //
+        $brands = Brand::select('id', 'name')->get();
+        $carTypes = CarType::select('id', 'name')->get();
+        $data = [
+            'title' => 'Tambah Mobil | Rent Car',
+            'brands' => $brands,
+            'carTypes' => $carTypes,
+            'currentNav' => 'car',
+            'currentNavChild' => 'addCar',
+        ];
+
+        return view('car.create', $data);
     }
 
     /**

@@ -5,7 +5,7 @@
         <div class="page-inner">
             {{-- header --}}
             <div class="page-header">
-                <h4 class="page-title">Ubah Mobil</h4>
+                <h4 class="page-title">Tambah Mobil</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
                         <a href="{{ route('car.index') }}">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="#">
-                            Form Ubah Mobil
+                            Form Tambah Mobil
                         </a>
                     </li>
                 </ul>
@@ -28,7 +28,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Form Ubah Mobil</div>
+                            <div class="card-title">Form Tambah Mobil</div>
                             <div class="card-category">
                                 Form ini digunakan untuk menambah Mobil
                             </div>
