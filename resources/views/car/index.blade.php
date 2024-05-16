@@ -189,7 +189,7 @@
                                 `<a href="{{ url('car/${car.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button onclick="deletecar('${car.id}')" class="btn btn-danger btn-sm">
+                                <button onclick="deleteCar('${car.id}')" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>`,
                             ];
@@ -218,7 +218,7 @@
             getCars();
         });
 
-        function deleteBook(id) {
+        function deleteCar(id) {
             swal({
                 dangerMode: true,
                 title: "Apakah anda yakin?",
@@ -229,7 +229,7 @@
                 if (result) {
                     $.ajax({
                         type: "DELETE",
-                        url: `{{ url('/admin/book/${id}') }}`,
+                        url: `{{ url('/car/${id}') }}`,
                         data: {
                             _token: "{{ csrf_token() }}",
                         },
@@ -242,15 +242,9 @@
                                         ok: "OK",
                                     },
                                 })
-                                .then((value) => {
-                                    if (value === "ok") {
-                                        location.reload();
-                                    }
+                                .then(() => {
+                                    getCars();
                                 });
-
-                            setTimeout(function() {
-                                location.reload();
-                            }, 4000);
                         },
                         error: function(xhr, status, error) {
                             if (xhr.responseJSON) {

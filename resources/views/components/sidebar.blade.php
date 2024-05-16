@@ -28,11 +28,11 @@
 
     {{-- sidebar --}}
     <ul class="nav nav-primary">
-        {{-- dashboard --}}
-        <li class="nav-item @if ($currentNav == 'dashboard') active @endif">
-            <a href="{{ route('rent.car.index') }}">
-                <i class="fas fa-home"></i>
-                <p>Dashboard</p>
+        {{-- Daftar Mobil --}}
+        <li class="nav-item @if ($currentNav == 'car') active @endif">
+            <a href="{{ route('car.index') }}">
+                <i class="fas fa-car"></i>
+                <p>Daftar Mobil</p>
             </a>
         </li>
         {{-- book --}}
