@@ -5,7 +5,7 @@
         <div class="page-inner">
             {{-- header --}}
             <div class="page-header">
-                <h4 class="page-title">Buku Perpustakaan</h4>
+                <h4 class="page-title">Mobil Rental</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
                         <a href="{{ route('rent.car.index') }}">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="#">
-                            Data Buku Perpustakaan
+                            Data Mobil Rental
                         </a>
                     </li>
                 </ul>
@@ -29,36 +29,34 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-head-row">
-                                <div class="card-title">Data Buku Perpustakaan</div>
-                                <div class="card-tools">
-                                    <a href="{{ route('car.create') }}"
-                                        class="btn btn-info btn-border btn-round btn-sm mr-2">
-                                        <span class="btn-label">
-                                        </span>
-                                        Tambah Buku
-                                    </a>
-                                </div>
+                                <div class="card-title">Data Mobil Rental</div>
+                                @if (Auth::user()->role == 'admin')
+                                    <div class="card-tools">
+                                        <a href="{{ route('car.create') }}"
+                                            class="btn btn-info btn-border btn-round btn-sm mr-2">
+                                            <span class="btn-label">
+                                            </span>
+                                            Tambah Mobil
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive pb-4">
-                                <table id="bookTable" class="display table table-striped table-hover">
+                                <table id="carTable" class="display table table-striped table-hover">
                                     <thead>
                                         <tr class="space-nowrap">
                                             <th class="text-center">#</th>
-                                            <th class="filter-none text-center">Cover</th>
-                                            <th>ID</th>
-                                            <th class="filter-none">ISBN</th>
-                                            <th class="filter-none">Kategori</th>
-                                            <th class="">Judul</th>
-                                            <th class="filter-none">Penerbit</th>
-                                            <th class="filter-none">Pengarang</th>
-                                            <th class="text-center">Tahun Terbit</th>
-                                            <th class="text-center">Jumlah Buku</th>
+                                            <th class="text-center">Nama</th>
+                                            <th class="">Merk</th>
+                                            <th class="">Model</th>
+                                            <th class="">Tarif Sewa (hari)</th>
+                                            <th class="filter-none">Plat Nomer</th>
                                             <th class="text-center filter-none text-nowrap">Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="bookTableBody">
+                                    <tbody id="carTableBody">
                                     </tbody>
                                 </table>
                             </div>
@@ -72,10 +70,22 @@
 
 @section('script')
     <script>
-        const bookTable = $('#bookTable').DataTable({
+        const carTable = $('#carTable').DataTable({
             columnDefs: [{
                 targets: 'filter-none',
                 orderable: false,
+            }, {
+                // Mengatur aturan pengurutan kustom untuk kolom keempat (index 3)
+                "targets": [4],
+                "render": function(data, type, row) {
+                    // Memeriksa tipe data, jika tampilan atau filter
+                    if (type === 'display' || type === 'filter') {
+                        // Memformat angka menggunakan fungsi formatCurrency
+                        return formatCurrency(data);
+                    }
+                    // Jika tipe data selain tampilan atau filter, kembalikan data tanpa perubahan
+                    return data;
+                }
             }, ],
             language: {
                 "sEmptyTable": "Tidak ada data yang tersedia di tabel",
@@ -119,30 +129,18 @@
             },
             lengthMenu: [5, 10, 25, 50, 100],
             pageLength: 10, // default page length
-            dom: "<'row pb-0 py-2'<'col-sm-12 col-xl-4'l><'col-sm-12 col-xl-8 bookTable_category_wrapper'f>>" +
+            dom: "<'row pb-0 py-2'<'col-sm-12 col-xl-4'l><'col-sm-12 col-xl-8 carTable_category_wrapper'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row pt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
         });
 
         $(document).ready(function() {
-            localStorage.removeItem('ebookPreview');
-
-            // add button create report
-            $('.bookTable_category_wrapper').prepend(
-                `<div id="bookTable_category" class="text-right mr-5">
-                    <label class="text-nowrap" for="bookTable_category">Kategori:
-                        <select name="bookTable_category" id="bookTable_category_select" class="form-control form-filter-datatable d-inline-block ml-1" aria-controls="bookTable" onchange="getBooks()">
-                            <option value="all" selected>Semua Kategori</option>
-                        </select></label>
-                </div>`
-            );
-
             getCategories();
-            getBooks();
+            getCars();
         });
 
         const showLoadingIndicator = () => {
-            $('#bookTableBody').html(tableLoader(11, `{{ asset('assets/img/loader/Ellipsis-2s-48px.svg') }}`));
+            $('#carTableBody').html(tableLoader(11, `{{ asset('assets/img/loader/Ellipsis-2s-48px.svg') }}`));
         }
 
         function getCategories() {
@@ -153,7 +151,7 @@
                 success: function(response) {
                     if (response.data.categories.length > 0) {
                         $.each(response.data.categories, function(index, category) {
-                            $('#bookTable_category_select').append(
+                            $('#carTable_category_select').append(
                                 `<option value="${category.id}">${category.name}</option>`
                             );
                         });
@@ -163,45 +161,39 @@
             });
         }
 
-        function getBooks() {
-            bookTable.clear().draw();
+        function getCars() {
+            carTable.clear().draw();
             showLoadingIndicator();
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('car.data') }}",
                 data: {
-                    category: $('#bookTable_category_select').val(),
+                    token: "{{ csrf_token() }}",
+                    carType: $('#filterCarType').val(),
+                    brand: $('#filterBrand').val(),
+                    startDate: $('#filterStartDate').val(),
+                    endDate: $('#filterEndDate').val(),
                 },
                 dataType: "json",
                 success: function(response) {
-                    if (response.data.books.length > 0) {
-                        $.each(response.data.books, function(index, book) {
+                    if (response.data.cars.length > 0) {
+                        $.each(response.data.cars, function(index, car) {
                             var rowData = [
                                 index + 1,
-                                `<div class="cover-book-image">
-                                    <a href="{{ asset('assets/img/dummy/Brown modern history book cover.png') }}"
-                                        class="">
-                                        <img src="{{ asset('assets/img/dummy/Brown modern history book cover.png') }}"
-                                            class="img-fluid">
-                                    </a>
-                                </div>`,
-                                book.id,
-                                book.isbn,
-                                book.category.description,
-                                book.title,
-                                book.publisher,
-                                book.author,
-                                book.year,
-                                book.stock,
-                                `<a href="{{ url('admin/book/${book.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
+                                car.name,
+                                car.brand.name,
+                                car.car_type.name,
+                                car.rental_rate,
+                                car.license_plate,
+                                `<a href="{{ url('admin/car/${car.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button onclick="deleteBook('${book.id}')" class="btn btn-danger btn-sm">
+                                <button onclick="deletecar('${car.id}')" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>`,
                             ];
-                            var rowNode = bookTable.row.add(rowData).draw(
+                            var rowNode = carTable.row.add(rowData).draw(
                                     false)
                                 .node();
 
@@ -212,44 +204,25 @@
                             $(rowNode).find('td').eq(9).addClass('text-center');
                             $(rowNode).find('td').eq(10).addClass('text-center text-nowrap');
                         });
-
-                        $('.cover-book-image').magnificPopup({
-                            delegate: 'a',
-                            type: 'image',
-                            removalDelay: 300,
-                            gallery: {
-                                enabled: false,
-                            },
-                            mainClass: 'mfp-with-zoom',
-                            zoom: {
-                                enabled: true,
-                                duration: 300,
-                                easing: 'ease-in-out',
-                                opener: function(openerElement) {
-                                    return openerElement.is('img') ? openerElement : openerElement
-                                        .find('img');
-                                }
-                            }
-                        });
                     } else {
-                        $('#bookTableBody').html(tableEmpty(11, 'buku perpustakaan'));
+                        $('#carTableBody').html(tableEmpty(11, 'Mobil Rental'));
                     }
                 },
                 error: function(response) {
-                    $('#bookTableBody').html(tableError(11, `${response.responseJSON.message}`));
+                    $('#carTableBody').html(tableError(11, `${response.responseJSON.message}`));
                 }
             });
         }
 
-        $("#bookTable_category_select").on('change', function() {
-            getBooks();
+        $("#carTable_category_select").on('change', function() {
+            getCars();
         });
 
         function deleteBook(id) {
             swal({
                 dangerMode: true,
                 title: "Apakah anda yakin?",
-                text: "Data buku akan dihapus!",
+                text: "Data Mobil akan dihapus!",
                 icon: "warning",
                 buttons: ["Batal", "Hapus"],
             }).then((result) => {

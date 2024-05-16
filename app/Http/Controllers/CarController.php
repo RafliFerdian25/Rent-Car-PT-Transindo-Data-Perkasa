@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
 use App\Models\Car;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
+use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
@@ -21,6 +23,16 @@ class CarController extends Controller
         ];
 
         return view('car.index', $data);
+    }
+
+    // Get data car
+    public function getCar(Request $request)
+    {
+        $cars = Car::with('brand:id,name', 'carType:id,name')->get();
+
+        return ResponseFormatter::success([
+            'cars' => $cars
+        ], 'Data mobil berhasil diambil');
     }
 
     /**

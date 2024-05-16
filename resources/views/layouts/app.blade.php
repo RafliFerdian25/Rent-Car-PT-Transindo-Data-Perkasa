@@ -182,6 +182,7 @@
     <script src="{{ asset('assets/js/loader.js') }}"></script>
     <script src="{{ asset('assets/js/currency.js') }}"></script>
     <script src="{{ asset('assets/js/error.js') }}"></script>
+    <script src="{{ asset('assets/js/utilities.js') }}"></script>
 
     @yield('script')
 </body>
