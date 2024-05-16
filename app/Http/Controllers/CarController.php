@@ -34,7 +34,14 @@ class CarController extends Controller
     // Get data car
     public function getCar(Request $request)
     {
-        // dd($request->all());
+        if ($request->filterStartDate || $request->filterEndDate) {
+            if (!$request->filterStartDate || !$request->filterEndDate) {
+                return ResponseFormatter::error([
+                    'error' => 'Tanggal mulai dan tanggal selesai harus diisi'
+                ], 'Validasi gagal', 422);
+            }
+        }
+
         $cars = Car::with('brand:id,name', 'carType:id,name', 'rents')
             ->when($request->filterBrand, function ($query) use ($request) {
                 $query->where('brand_id', $request->filterBrand);

@@ -284,7 +284,7 @@
                     $('#formFilterCarButton').prop('disabled', false);
                 },
                 error: function(response) {
-                    $('#carTableBody').html(tableError(11, `${response.responseJSON.message}`));
+                    $('#carTableBody').html(tableError(11, `${response.responseJSON.data.error}`));
 
                     $('#formFilterCarButton').html('Kirim');
                     $('#formFilterCarButton').prop('disabled', false);
