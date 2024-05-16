@@ -91,27 +91,29 @@
                 <p>Kategori</p>
             </a>
         </li>
-        {{-- transaction --}}
-        <li class="nav-item @if ($currentNav == 'transaction') active @endif">
-            <a data-toggle="collapse" href="#transactionMenu">
+        {{-- rent --}}
+        <li class="nav-item @if ($currentNav == 'rent') active @endif">
+            <a data-toggle="collapse" href="#rentMenu">
                 <i class="fas fa-box"></i>
                 <p>Peminjaman</p>
                 <span class="caret"></span>
             </a>
-            <div class="collapse" id="transactionMenu">
+            <div class="collapse" id="rentMenu">
                 <ul class="nav nav-collapse">
                     <li class="@if ($currentNavChild == 'listBorrow') active @endif">
-                        <a href="{{ route('car.index') }}">
+                        <a href="{{ route('rent.index') }}">
                             <span class="sub-item">Daftar Pinjam</span>
                         </a>
                     </li>
-                    <li class="@if ($currentNavChild == 'create') active @endif">
-                        <a href="{{ route('car.index') }}">
-                            <span class="sub-item">Pinjam Buku</span>
-                        </a>
-                    </li>
+                    @if (Auth::user()->role == 'customer')
+                        <li class="@if ($currentNavChild == 'create') active @endif">
+                            <a href="{{ route('rent.create') }}">
+                                <span class="sub-item">Pinjam Mobil</span>
+                            </a>
+                        </li>
+                    @endif
                     <li class="@if ($currentNavChild == 'history') active @endif">
-                        <a href="{{ route('car.index') }}">
+                        <a href="{{ route('rent.history') }}">
                             <span class="sub-item">Riwayat Pinjam</span>
                         </a>
                     </li>

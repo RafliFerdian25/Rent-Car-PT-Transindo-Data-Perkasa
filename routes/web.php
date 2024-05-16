@@ -44,8 +44,12 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
 
-
-    Route::controller(RentController::class)->group(function () {
-        Route::get('/rent/create', 'index')->name('rent.car.index');
+    Route::middleware(['checkRole:customer'])->group(function () {
+        Route::controller(RentController::class)->group(function () {
+            Route::get('/rent', 'index')->name('rent.index');
+            Route::get('/rent/history', 'history')->name('rent.history');
+            Route::get('/rent/create', 'create')->name('rent.create');
+            Route::post('/rent', 'store')->name('rent.store');
+        });
     });
 });

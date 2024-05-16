@@ -34,7 +34,7 @@
                     <div class="quick-actions-items">
                         <div class="row m-0">
                             {{-- dashboard --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item rounded-circle" style="background: #6861ce">
                                         <i class="fas fa-home"></i>
@@ -52,7 +52,7 @@
                                 </div>
                             </a>
                             {{-- ebook --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-warning rounded-circle">
                                         <i class="fas fa-book"></i>
@@ -61,7 +61,7 @@
                                 </div>
                             </a>
                             {{-- transaction --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-dark rounded-circle">
                                         <i class="fas fa-box"></i>
@@ -70,7 +70,7 @@
                                 </div>
                             </a>
                             {{-- student --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-danger rounded-circle">
                                         <i class="fas fa-user-graduate"></i>
@@ -79,7 +79,7 @@
                                 </div>
                             </a>
                             {{-- category --}}
-                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.car.index') }}">
+                            <a class="col-6 col-md-4 p-0" href="{{ route('rent.index') }}">
                                 <div class="quick-actions-item">
                                     <div class="avatar-item bg-success rounded-circle">
                                         <i class="fas fa-layer-group"></i>
@@ -118,7 +118,7 @@
                     </li>
                     <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('rent.car.index') }}">Home</a>
+                        <a class="dropdown-item" href="{{ route('rent.index') }}">Home</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item hover-logout" href="{{ url('logout') }}" onclick="logout()">Logout</a>
                     </li>

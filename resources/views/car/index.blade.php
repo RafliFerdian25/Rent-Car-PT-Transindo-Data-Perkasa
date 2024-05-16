@@ -8,7 +8,7 @@
                 <h4 class="page-title">Mobil Rental</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('rent.car.index') }}">
+                        <a href="{{ route('rent.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>
@@ -244,6 +244,7 @@
                 },
                 dataType: "json",
                 success: function(response) {
+                    var userRole = "{{ Auth::user()->role }}";
                     if (response.data.cars.length > 0) {
                         $.each(response.data.cars, function(index, car) {
                             var rowData = [
@@ -253,12 +254,14 @@
                                 car.car_type.name,
                                 car.rental_rate,
                                 car.license_plate,
-                                `<a href="{{ url('car/${car.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
+                                userRole == 'admin' ? `
+                                <a href="{{ url('car/${car.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <button onclick="deleteCar('${car.id}')" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash"></i>
-                                </button>`,
+                                </button>
+                                ` : '',
                             ];
                             var rowNode = carTable.row.add(rowData).draw(
                                     false)

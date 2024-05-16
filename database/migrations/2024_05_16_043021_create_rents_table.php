@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('end_date');
             $table->dateTime('return_date')->nullable();
             $table->enum('status', ['rent', 'return'])->default('rent');
-            $table->integer('amount');
+            $table->integer('amount')->default(0);
             $table->timestamps();
         });
     }

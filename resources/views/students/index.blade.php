@@ -8,7 +8,7 @@
                 <h4 class="page-title">Data Siswa Peminjam</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('rent.car.index') }}">
+                        <a href="{{ route('rent.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>
@@ -188,11 +188,11 @@
                                                                 <tbody>
                                                                     ${student.transactions.map((transaction, index) => {
                                                                         return `
-                                                                                <tr class="">
-                                                                                    <td scope="row" class="text-center">${index + 1}</td>
-                                                                                    <td>${transaction.book.title}</td>
-                                                                                </tr>
-                                                                                `;
+                                                                                    <tr class="">
+                                                                                        <td scope="row" class="text-center">${index + 1}</td>
+                                                                                        <td>${transaction.book.title}</td>
+                                                                                    </tr>
+                                                                                    `;
                                                                     }).join('') }
                                                                 </tbody>
                                                             </table>

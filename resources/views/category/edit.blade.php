@@ -8,7 +8,7 @@
                 <h4 class="page-title">Ubah Kategori</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('rent.car.index') }}">
+                        <a href="{{ route('rent.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>

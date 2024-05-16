@@ -1,14 +1,14 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('content')
     <div class="container">
         <div class="page-inner">
             {{-- header --}}
             <div class="page-header">
-                <h4 class="page-title">Peminjaman Buku</h4>
+                <h4 class="page-title">Peminjaman Mobil</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
-                        <a href="{{ route('rent.car.index') }}">
+                        <a href="{{ route('car.index') }}">
                             <i class="flaticon-home"></i>
                         </a>
                     </li>
@@ -16,8 +16,8 @@
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.list.transaction') }}">
-                            Daftar Peminjaman Buku
+                        <a href="{{ route('rent.index') }}">
+                            Daftar Peminjaman Mobil
                         </a>
                     </li>
                     <li class="separator">
@@ -25,7 +25,7 @@
                     </li>
                     <li class="nav-item">
                         <a href="#">
-                            Form Pinjam Buku
+                            Form Pinjam Mobil
                         </a>
                     </li>
                 </ul>
@@ -36,33 +36,21 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Form Peminjaman Buku</div>
+                            <div class="card-title">Form Peminjaman Mobil</div>
                             <div class="card-category">
-                                Form ini digunakan untuk meminjam buku pada perpustakaan SMK Negeri 1 Sungai Menang
+                                Form ini digunakan untuk meminjam mobil pada perpustakaan SMK Negeri 1 Sungai Menang
                             </div>
                         </div>
-                        <form id="formAddCategory" method="POST">
+                        <form id="formAddRent" method="POST">
                             @csrf
                             <div class="card-body">
-                                {{-- student id --}}
+                                {{-- car id --}}
                                 <div class="form-group form-show-validation row select2-form-input">
-                                    <label for="student_id" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Nama
-                                        Siswa
+                                    <label for="car_id" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Mobil
                                         <span class="required-label">*</span></label>
                                     <div class="col-lg-6 col-md-9 col-sm-8">
                                         <div class="select2-input">
-                                            <select class="form-control" id="student_id" name="student_id" required>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- book id --}}
-                                <div class="form-group form-show-validation row select2-form-input">
-                                    <label for="book_id" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Buku
-                                        <span class="required-label">*</span></label>
-                                    <div class="col-lg-6 col-md-9 col-sm-8">
-                                        <div class="select2-input">
-                                            <select class="form-control" id="book_id" name="book_id" required>
+                                            <select class="form-control" id="carId" name="car_id" required>
                                             </select>
                                         </div>
                                     </div>
@@ -91,9 +79,9 @@
                             <div class="card-action">
                                 <div class="row">
                                     <div class="col-md-12 text-right">
-                                        <a href="{{ route('admin.list.transaction') }}"
-                                            class="btn btn-default btn-outline-dark" role="presentation">Batal</a>
-                                        <button class="btn btn-primary ml-3" id="formAddCategoryButton"
+                                        <a href="{{ route('car.index') }}" class="btn btn-default btn-outline-dark"
+                                            role="presentation">Batal</a>
+                                        <button class="btn btn-primary ml-3" id="formAddRentButton"
                                             type="submit">Kirim</button>
                                     </div>
                                 </div>
@@ -115,9 +103,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         $(document).ready(function() {
-            getBookData();
-            getStudentData();
-            $('#book_id').select2({
+            getCarData();
+            // getStudentData();
+            $('#carId').select2({
                 theme: "bootstrap",
             });
             $('#student_id').select2({
@@ -133,17 +121,17 @@
             });
         });
 
-        function getBookData() {
-            var htmlstring = '<option value="">Pilih Buku</option>';
+        function getCarData() {
+            var htmlstring = '<option value="">Pilih Mobil</option>';
             $.ajax({
                 type: "GET",
-                url: `{{ route('admin.transaction.create.book.data') }}`,
+                url: `{{ route('car.data') }}`,
                 dataType: "json",
                 success: function(response) {
-                    $.each(response.data.books, function(index, item) {
-                        htmlstring += `<option value="${item.id}">${item.title}</option>`;
+                    $.each(response.data.cars, function(index, item) {
+                        htmlstring += `<option value="${item.id}">${item.name}</option>`;
                     });
-                    $('#book_id').html(htmlstring);
+                    $('#carId').html(htmlstring);
                 },
                 error: function(xhr, status, error) {
                     swal({
@@ -156,36 +144,9 @@
             });
         }
 
-        function getStudentData() {
-            var htmlstring = '<option value="">Pilih Siswa</option>';
-            $.ajax({
-                type: "GET",
-                url: `{{ route('admin.transaction.create.student.data') }}`,
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
-                    $.each(response.data.students, function(index, item) {
-                        htmlstring += `<option value="${item.nis}">${item.name}</option>`;
-                    });
-                    $('#student_id').html(htmlstring);
-                },
-                error: function(xhr, status, error) {
-                    swal({
-                        title: "Gagal!",
-                        text: "Terjadi kegagalan, silahkan coba beberapa saat lagi! Error: " + error,
-                        icon: "error",
-                    });
-                    return false;
-                },
-            });
-        }
-
-        $("#formAddCategory").validate({
+        $("#formAddRent").validate({
             rules: {
-                student_id: {
-                    required: true,
-                },
-                book_id: {
+                car_id: {
                     required: true,
                 },
                 start_date: {
@@ -196,11 +157,8 @@
                 },
             },
             messages: {
-                student_id: {
-                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>NIS Siswa tidak boleh kosong',
-                },
-                book_id: {
-                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>ID Buku tidak boleh kosong',
+                car_id: {
+                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>ID Mobil tidak boleh kosong',
                 },
                 start_date: {
                     required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Tanggal Mulai Pinjam tidak boleh kosong',
@@ -214,21 +172,20 @@
             },
             submitHandler: function(form, event) {
                 event.preventDefault();
-                $('#formAddCategoryButton').html('<i class="fas fa-circle-notch text-lg spinners-2"></i>');
-                $('#formAddCategoryButton').prop('disabled', true);
+                $('#formAddRentButton').html('<i class="fas fa-circle-notch text-lg spinners-2"></i>');
+                $('#formAddRentButton').prop('disabled', true);
                 $.ajax({
                     type: "POST",
-                    url: `{{ route('admin.transaction.store') }}`,
+                    url: `{{ route('rent.store') }}`,
                     data: {
                         _token: '{{ csrf_token() }}',
-                        student_id: $('#student_id').val(),
-                        book_id: $('#book_id').val(),
+                        car_id: $('#carId').val(),
                         start_date: moment($('#start_date').val(), 'DD/MM/YYYY').format('YYYY/MM/DD'),
                         end_date: moment($('#end_date').val(), 'DD/MM/YYYY').format('YYYY/MM/DD'),
                     },
                     success: function(response) {
-                        $('#formAddCategoryButton').html('Kirim');
-                        $('#formAddCategoryButton').prop('disabled', false);
+                        $('#formAddRentButton').html('Kirim');
+                        $('#formAddRentButton').prop('disabled', false);
                         swal({
                                 title: "Berhasil!",
                                 text: response.meta.message,
@@ -254,8 +211,8 @@
                         }, 4000);
                     },
                     error: function(xhr, status, error) {
-                        $('#formAddCategoryButton').html('Kirim');
-                        $('#formAddCategoryButton').prop('disabled', false);
+                        $('#formAddRentButton').html('Kirim');
+                        $('#formAddRentButton').prop('disabled', false);
                         if (xhr.responseJSON) {
                             swal({
                                 title: "Gagal!",
