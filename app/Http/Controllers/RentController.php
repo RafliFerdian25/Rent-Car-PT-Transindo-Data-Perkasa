@@ -126,7 +126,7 @@ class RentController extends Controller
         }
     }
 
-    public function return(Request $request, Rent $rent)
+    public function return(Rent $rent)
     {
         // mengecek jika mobil belum pada waktu pinjam
         $startDate = Carbon::parse($rent->start_date);

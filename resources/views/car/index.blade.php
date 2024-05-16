@@ -261,7 +261,9 @@
                                 <button onclick="deleteCar('${car.id}')" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                                ` : '',
+                                ` : `<a href="{{ route('rent.create') }}" class="btn btn-primary btn-sm mr-2">
+                                    Pinjam
+                                </a>`,
                             ];
                             var rowNode = carTable.row.add(rowData).draw(
                                     false)

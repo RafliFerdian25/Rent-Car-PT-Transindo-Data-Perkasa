@@ -47,12 +47,8 @@ class CarController extends Controller
                 $endDate = Carbon::parse($request->filterEndDate);
                 $query->whereDoesntHave('rents', function ($query) use ($startDate, $endDate) {
                     $query->where(function ($query) use ($startDate, $endDate) {
-                        $query->whereNotBetween('start_date', [$startDate, $endDate])
-                            ->orWhereNotBetween('end_date', [$startDate, $endDate])
-                            ->orWhere(function ($query) use ($startDate, $endDate) {
-                                $query->where('start_date', '<=', $startDate)
-                                    ->where('end_date', '>=', $endDate);
-                            });
+                        $query->whereBetween('start_date', [$startDate, $endDate])
+                            ->orWhereBetween('end_date', [$startDate, $endDate]);
                     });
                 });
             })
