@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('car_id')->constrained()->onDelete('cascade');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->timestamp('return_date')->nullable();
-            $table->string('status')->default('rent');
-            $table->string('amount');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
+            $table->dateTime('return_date')->nullable();
+            $table->enum('status', ['rent', 'return'])->default('rent');
+            $table->integer('amount');
             $table->timestamps();
         });
     }
