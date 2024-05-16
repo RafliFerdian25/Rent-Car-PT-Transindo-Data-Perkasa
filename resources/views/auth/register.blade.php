@@ -54,25 +54,37 @@
                                                 name="password" id="password" class="input-form">
                                         </div>
                                     </div>
+                                    {{-- confirm password --}}
+                                    <div class="sign__input-wrapper mb-15">
+                                        <label for="password_confirmation">
+                                            <h5>Konfirmasi Kata Sandi</h5>
+                                        </label>
+                                        <div class="sign__input">
+                                            <i class="fal fa-lock icon-form"></i>
+                                            <input type="password" placeholder="Masukan konfirmasi kata sandi"
+                                                value="" name="password_confirmation" id="password_confirmation"
+                                                class="input-form">
+                                        </div>
+                                    </div>
                                     {{-- name --}}
                                     <div class="sign__input-wrapper mb-15">
                                         <label for="name">
-                                            <h5>Nama</h5>
+                                            <h5>Nama Lengkap</h5>
                                         </label>
                                         <div class="sign__input">
                                             <i class="fal fa-user icon-form"></i>
-                                            <input type="text" placeholder="Masukan name" name="name" id="name"
-                                                required class="input-form">
+                                            <input type="text" placeholder="Masukan nama lengkap" name="name"
+                                                id="name" required class="input-form">
                                         </div>
                                     </div>
                                     {{-- address --}}
                                     <div class="sign__input-wrapper mb-15">
-                                        <label for="alamat">
+                                        <label for="address">
                                             <h5>Alamat</h5>
                                         </label>
                                         <div class="sign__input">
                                             <i class="fal fa-map icon-form"></i>
-                                            <input type="text" placeholder="Masukan alamat" name="alamat" id="alamat"
+                                            <input type="text" placeholder="Masukan alamat" name="address" id="address"
                                                 required class="input-form">
                                         </div>
                                     </div>
@@ -83,7 +95,7 @@
                                         </label>
                                         <div class="sign__input">
                                             <i class="fal fa-phone icon-form"></i>
-                                            <input type="text" placeholder="Masukan no. telepon" name="phone"
+                                            <input type="number" placeholder="Masukan no. telepon" name="phone"
                                                 id="phone" required class="input-form">
                                         </div>
                                     </div>
@@ -94,7 +106,7 @@
                                         </label>
                                         <div class="sign__input">
                                             <i class="fal fa-id-card icon-form"></i>
-                                            <input type="text" placeholder="Masukan no. SIM" name="driving_license"
+                                            <input type="number" placeholder="Masukan no. SIM" name="driving_license"
                                                 id="driving_license" required class="input-form">
                                         </div>
                                     </div>
@@ -112,38 +124,97 @@
 
 @section('script')
     <script>
+        // metode untuk memeriksa kesamaan password dan konfirmasi password
+        $.validator.addMethod("equalToPassword", function(value, element) {
+                return value === $("#password").val();
+            },
+            '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Konfirmasi kata sandi harus sama dengan kata sandi.'
+        );
+
         // validate form
         $("#registerForm").validate({
             rules: {
                 email: {
                     required: true,
+                    email: true,
                 },
                 password: {
                     required: true,
+                    minlength: 8,
+                },
+                password_confirmation: {
+                    required: true,
+                    equalToPassword: true,
+                },
+                name: {
+                    required: true,
+                },
+                address: {
+                    required: true,
+                },
+                phone: {
+                    required: true,
+                    minlength: 9,
+                },
+                driving_license: {
+                    required: true,
+                    minlength: 14,
                 }
             },
             messages: {
                 email: {
                     required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Email tidak boleh kosong',
+                    email: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Email tidak valid',
                 },
                 password: {
                     required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Kata sandi tidak boleh kosong',
+                    minlength: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Kata sandi minimal 8 karakter',
+                },
+                password_confirmation: {
+                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Konfirmasi kata sandi tidak boleh kosong',
+                    equalToPassword: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Konfirmasi kata sandi harus sama dengan kata sandi',
+                },
+                name: {
+                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Nama lengkap tidak boleh kosong',
+                },
+                address: {
+                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>Alamat tidak boleh kosong',
+                },
+                phone: {
+                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>No. telepon tidak boleh kosong',
+                    minlength: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>No. telepon minimal 9 karakter',
+                },
+                driving_license: {
+                    required: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>No. SIM tidak boleh kosong',
+                    minlength: '<i class="fas fa-exclamation-circle mr-6 text-sm icon-error"></i>No. SIM minimal 14 karakter',
                 }
             },
             submitHandler: function(form) {
                 $('#registerButton').html('<i class="fas fa-circle-notch text-lg spinners-2"></i>');
                 $('#registerButton').prop('disabled', true);
                 $.ajax({
-                    url: "{{ url('login') }}",
+                    url: "{{ route('register.store') }}",
                     type: "POST",
                     data: {
                         email: $('#email').val(),
                         password: $('#password').val(),
+                        password_confirmation: $('#password_confirmation').val(),
+                        name: $('#name').val(),
+                        address: $('#address').val(),
+                        phone: $('#phone').val(),
+                        driving_license: $('#driving_license').val(),
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
                         $('#registerButton').html('Masuk');
                         $('#registerButton').prop('disabled', false);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Berhasil mendaftar akun',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                         window.location.href = response.data.redirect
                     },
                     error: function(xhr, status, error) {
@@ -153,21 +224,22 @@
                             if (xhr.responseJSON.message == "CSRF token mismatch.") {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Login Gagal!',
+                                    title: 'Daftar Akun Gagal!',
                                     text: "Mohon maaf email/password Anda tidak sesuai",
                                 })
                                 location.reload()
                             } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Login Gagal!',
-                                    text: xhr.responseJSON.meta.message,
+                                    title: 'Daftar Akun Gagal!',
+                                    text: xhr.responseJSON.meta.message + ", Error: " +
+                                        xhr.responseJSON.data.error,
                                 })
                             }
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Login Gagal!',
+                                title: 'Daftar Akun Gagal!',
                                 text: "Terjadi kegagalan, silahkan coba beberapa saat lagi! Error: " +
                                     error,
                             })

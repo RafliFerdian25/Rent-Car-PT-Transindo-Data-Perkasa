@@ -19,8 +19,8 @@ return new class extends Migration
             $table->enum('role', ['admin', 'customer'])->default('customer');
             $table->string('name', 50);
             $table->text('address');
-            $table->string('phone', 25);
-            $table->string('driving_license', 14);
+            $table->string('phone', 25)->unique();
+            $table->string('driving_license', 25)->unique();
             $table->rememberToken();
             $table->timestamps();
         });

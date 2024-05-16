@@ -18,7 +18,7 @@ Route::controller(LoginController::class)->group(function () {
 
 // register
 Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'register')->name('register');
+    Route::get('/register', 'create')->name('register');
     Route::post('/register', 'store')->name('register.store');
 });
 

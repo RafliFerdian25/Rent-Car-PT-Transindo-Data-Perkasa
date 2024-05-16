@@ -60,9 +60,9 @@
                                         </div>
                                     </div> --}}
                                     <button id="loginButton" class="tp-btn w-100 rounded-pill">Masuk</button>
-                                    {{-- <div class="sign__new text-center mt-20">
-                                        <p>Lupa Kata Sandi? <a href="{{ route('') }}">Klik disini!</a></p>
-                                    </div> --}}
+                                    <div class="sign__new text-center mt-20">
+                                        <p>Belum punya akun? <a href="{{ route('register') }}">Klik disini!</a></p>
+                                    </div>
                                 </form>
                             </div>
                         </div>

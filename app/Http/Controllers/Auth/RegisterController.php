@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\RoleUser;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
@@ -18,20 +19,20 @@ class RegisterController extends Controller
     {
         $data = [
             'title' => 'Register | Rent Car',
-            'ptSection' => '54px'
         ];
         return view('auth.register', $data);
     }
 
     public function store(Request $request)
     {
+        // Validasi form
         $rules = [
-            'name' => 'required|min:3',
-            'phone' => 'required|numeric',
-            'gender' => 'required',
-            'username' => 'required|min:3|max:25|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:8',
+            'name' => 'required|min:3',
+            'address' => 'required',
+            'phone' => 'required|numeric|min:10|unique:users',
+            'driving_license' => 'required|numeric|min:14|unique:users',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
@@ -47,45 +48,39 @@ class RegisterController extends Controller
                 : back()->with(['error' => $validator->errors()]);
         }
 
-        // create customer
-        $customer = Customer::create([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'gender' => $request->gender,
-            'profile_picture' => 'profile/profile-placeholder.png',
-            'slug' => str_replace(' ', '-', $request->name)
-        ]);
+        try {
+            DB::beginTransaction();
+            // create user
+            $user = User::create([
+                'address' => $request->address,
+                'email' => $request->email,
+                'password' => Hash::make($request->password), // Hash::make() untuk mengenkripsi password
+                'role' => 'customer',
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'driving_license' => $request->driving_license,
+            ]);
 
-        // create user
-        $user = User::create([
-            'username' => $request->username,
-            'customer_id' => $customer->id,
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Hash::make() untuk mengenkripsi password
-        ]);
-
-        RoleUser::create([
-            'user_id' => $user->id,
-            'role_id' => 3,
-        ]);
-
-        if ($user) {
-            return $request->ajax()
-                ? ResponseFormatter::success(
+            // berhasil membuat user
+            if ($user) {
+                DB::commit();
+                return ResponseFormatter::success(
                     [
-                        'redirect' => redirect('/login')->getTargetUrl(),
+                        'redirect' => route('login'),
                     ],
                     'Pendaftaran berhasil',
-                ) : redirect('/login')->with('success', 'Pendaftaran berhasil');
-        }
-
-        return $request->ajax()
-            ? ResponseFormatter::error(
+                );
+            }
+        } catch (\Exception $e) {
+            // gagal membuat user
+            DB::rollBack();
+            return ResponseFormatter::error(
                 [
-                    'error' => 'Pendaftaran gagal',
+                    'error' => $e->getMessage(),
                 ],
                 'Pendaftaran gagal',
-                400,
-            ) : back()->withInput()->withErrors(['error' => 'Pendaftaran gagal']);
+                500,
+            );
+        }
     }
 }
