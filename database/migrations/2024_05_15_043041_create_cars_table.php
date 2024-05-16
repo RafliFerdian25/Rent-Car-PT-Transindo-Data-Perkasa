@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('brand_id');
-            $table->string('car_type_id');
+            $table->string('brand_id')->constrained()->onDelete('cascade');
+            $table->string('car_type_id')->contrained()->onDelete('cascade');
             $table->string('license_plate');
             $table->string('rental_rate');
             $table->timestamps();
