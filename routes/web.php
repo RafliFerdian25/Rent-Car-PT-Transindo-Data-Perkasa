@@ -27,10 +27,12 @@ Route::controller(RegisterController::class)->group(function () {
 
 Route::group(['middleware' => ['auth']], function () {
     // admin
-    Route::middleware([CheckRole::class])->group(function () {
+    Route::middleware(['checkRole:admin'])->group(function () {
         Route::controller(CarController::class)->group(function () {
             Route::get('/car/create', 'create')->name('car.create');
             Route::post('/car', 'store')->name('car.store');
+            Route::get('/car/{car:id}/edit', 'edit')->name('car.edit');
+            Route::put('/car/{car:id}', 'update')->name('car.update');
         });
     });
 
@@ -38,8 +40,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/', 'index')->name('car.index');
         Route::get('/car/data', 'getcar')->name('car.data');
         Route::get('/car/category/data', 'getCategories')->name('car.category.data');
-        Route::get('/car/{car:id}/edit', 'edit')->name('car.edit');
-        Route::put('/car/{car:id}', 'update')->name('car.update');
         Route::delete('/car/{car:id}', 'destroy')->name('car.destroy');
     });
 

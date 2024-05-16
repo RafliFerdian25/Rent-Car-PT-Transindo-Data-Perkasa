@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ResponseFormatter;
 use App\Models\Car;
-use App\Http\Requests\StoreCarRequest;
-use App\Http\Requests\UpdateCarRequest;
 use App\Models\Brand;
 use App\Models\CarType;
 use Illuminate\Http\Request;
@@ -103,22 +101,54 @@ class CarController extends Controller
         $brands = Brand::select('id', 'name')->get();
         $carTypes = CarType::select('id', 'name')->get();
         $data = [
-            'title' => 'Tambah Mobil | Rent Car',
+            'title' => 'Ubah Mobil | Rent Car',
+            'car' => $car,
             'brands' => $brands,
             'carTypes' => $carTypes,
             'currentNav' => 'car',
-            'currentNavChild' => 'addCar',
+            'currentNavChild' => 'editCar',
         ];
 
-        return view('car.create', $data);
+        return view('car.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCarRequest $request, Car $car)
+    public function update(Request $request, Car $car)
     {
-        //
+
+        $rules = [
+            'name' => 'required|string',
+            'brand_id' => 'required|exists:brands,id',
+            'car_type_id' => 'required|exists:car_types,id',
+            'rental_rate' => 'required|numeric',
+            'license_plate' => 'required|string',
+        ];
+
+        $validated = Validator::make($request->all(), $rules);
+
+        if ($validated->fails()) {
+            return ResponseFormatter::error([
+                'message' => $validated->errors()->first()
+            ], 'Validasi gagal', 422);
+        }
+
+        try {
+            DB::beginTransaction();
+            // ubah data mobil
+            $car->update($request->all());
+
+            DB::commit();
+            return ResponseFormatter::success([
+                'redirect' => route('car.index'),
+            ], 'Data mobil berhasil diubah');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => $e->getMessage()
+            ], 'Data mobil gagal diubah', 500);
+        }
     }
 
     /**
@@ -126,6 +156,19 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $car->delete();
+
+            DB::commit();
+            return ResponseFormatter::success([
+                'redirect' => route('car.index'),
+            ], 'Data mobil berhasil dihapus');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error([
+                'message' => $e->getMessage()
+            ], 'Data mobil gagal dihapus', 500);
+        }
     }
 }

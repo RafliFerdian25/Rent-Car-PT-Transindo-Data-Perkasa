@@ -186,7 +186,7 @@
                                 car.car_type.name,
                                 car.rental_rate,
                                 car.license_plate,
-                                `<a href="{{ url('admin/car/${car.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
+                                `<a href="{{ url('car/${car.id}/edit') }}" class="btn btn-primary btn-sm mr-2">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <button onclick="deletecar('${car.id}')" class="btn btn-danger btn-sm">

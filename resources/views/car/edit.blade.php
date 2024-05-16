@@ -33,8 +33,9 @@
                                 Form ini digunakan untuk menambah Mobil
                             </div>
                         </div>
-                        <form id="formAddCar" method="POST">
+                        <form id="formUpdateCar" method="POST">
                             @csrf
+                            @method('PUT')
                             <div class="card-body">
                                 {{-- Nama --}}
                                 <div class="form-group form-show-validation row">
@@ -42,7 +43,7 @@
                                         <span class="required-label">*</span></label>
                                     <div class="col-lg-6 col-md-9 col-sm-8">
                                         <input type="text" class="form-control" id="name" name="name"
-                                            placeholder="Masukkan Nama Mobil" required>
+                                            placeholder="Masukkan Nama Mobil" required value="{{ $car->name }}">
                                     </div>
                                 </div>
                                 {{-- Merek --}}
@@ -53,7 +54,9 @@
                                         <select class="form-control" id="brand_id" name="brand_id" required>
                                             <option value="">Pilih Merek</option>
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}"
+                                                    @if ($car->brand_id == $brand->id) selected @endif>{{ $brand->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -66,7 +69,9 @@
                                         <select class="form-control" id="car_type_id" name="car_type_id" required>
                                             <option value="">Pilih Model</option>
                                             @foreach ($carTypes as $carType)
-                                                <option value="{{ $carType->id }}">{{ $carType->name }}</option>
+                                                <option value="{{ $carType->id }}"
+                                                    @if ($car->brand_id == $carType->id) selected @endif>{{ $carType->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -74,11 +79,11 @@
                                 {{-- Tarif sewa --}}
                                 <div class="form-group form-show-validation row">
                                     <label for="rental_rate" class="col-lg-3 col-md-3 col-sm-4 mt-sm-2 text-sm-right">Tarif
-                                        Sewa
+                                        Sewa (Hari)
                                         <span class="required-label">*</span></label>
                                     <div class="col-lg-6 col-md-9 col-sm-8">
                                         <input type="number" class="form-control" id="rental_rate" name="rental_rate"
-                                            placeholder="Masukkan Tarif Sewa" required>
+                                            placeholder="Masukkan Tarif Sewa" required value="{{ $car->rental_rate }}">
                                     </div>
                                 </div>
                                 {{-- Nomer Plat --}}
@@ -89,7 +94,7 @@
                                         <span class="required-label">*</span></label>
                                     <div class="col-lg-6 col-md-9 col-sm-8">
                                         <input type="text" class="form-control" id="license_plate" name="license_plate"
-                                            placeholder="Masukkan Nomer Plat" required>
+                                            placeholder="Masukkan Nomer Plat" required value="{{ $car->license_plate }}">
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +103,7 @@
                                     <div class="col-md-12 text-right">
                                         <a href="{{ route('car.index') }}" id="backToCar"
                                             class="btn btn-default btn-outline-dark" role="presentation">Batal</a>
-                                        <button class="btn btn-primary ml-3" id="formAddCarButton"
+                                        <button class="btn btn-primary ml-3" id="formUpdateCarButton"
                                             type="submit">Kirim</button>
                                     </div>
                                 </div>
@@ -141,7 +146,7 @@
             // });
         });
 
-        $("#formAddCar").validate({
+        $("#formUpdateCar").validate({
             rules: {
                 name: {
                     required: true,
@@ -185,17 +190,17 @@
             submitHandler: function(form, event) {
                 event.preventDefault();
                 var formData = new FormData(form);
-                $('#formAddCarButton').html('<i class="fas fa-circle-notch text-lg spinners-2"></i>');
-                $('#formAddCarButton').prop('disabled', true);
+                $('#formUpdateCarButton').html('<i class="fas fa-circle-notch text-lg spinners-2"></i>');
+                $('#formUpdateCarButton').prop('disabled', true);
                 $.ajax({
                     type: "POST",
-                    url: `{{ route('car.store') }}`,
+                    url: `{{ url('car/' . $car->id) }}`,
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $('#formAddCarButton').html('Kirim');
-                        $('#formAddCarButton').prop('disabled', false);
+                        $('#formUpdateCarButton').html('Kirim');
+                        $('#formUpdateCarButton').prop('disabled', false);
                         swal({
                                 title: "Berhasil!",
                                 text: response.meta.message,
@@ -219,8 +224,8 @@
                         }, 4000);
                     },
                     error: function(xhr, status, error) {
-                        $('#formAddCarButton').html('Kirim');
-                        $('#formAddCarButton').prop('disabled', false);
+                        $('#formUpdateCarButton').html('Kirim');
+                        $('#formUpdateCarButton').prop('disabled', false);
                         if (xhr.responseJSON) {
                             new swal({
                                 title: "Gagal!",
